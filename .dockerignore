@@ -1,0 +1,27 @@
+# Ignore Python bytecode files
+*.pyc
+__pycache__
+
+# Ignore pytest cache directories
+.pytest_cache/
+
+# Ignore development and local environment files
+.env
+*.log
+
+# Ignore virtual environment files
+venv/
+env/
+
+# Ignore any build artifacts
+build/
+dist/
+*.egg-info/
+
+# Ignore version control files
+.git
+.gitignore
+
+# Ignore Docker-specific files
+.dockerignore
+.docker/
