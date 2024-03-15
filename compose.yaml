@@ -3,5 +3,7 @@ services:
     build:
       context: .
       target: server-dev
+    env_file:
+      - .env
     ports:
       - "8000:80"

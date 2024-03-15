@@ -29,6 +29,8 @@ COPY pyproject.toml poetry.lock /app/
 
 FROM poetry-base as core-dev
 
+ENV PYTHONUNBUFFERED=1
+
 COPY src/core core 
 COPY src/shop shop
 
@@ -38,9 +40,9 @@ RUN poetry install --only backend,core && rm -rf ${POETRY_CACHE_DIR}
 
 RUN touch /app/__init__.py
 COPY src/server server
-COPY src/run_server.py run_server.py
+COPY src/main.py main.py
 
-CMD ["python", "-m", "run_server"]
+CMD ["python", "-m", "main"]
 
 
 ## Production stages
@@ -61,7 +63,7 @@ COPY src/server /server
 COPY src/core /core 
 COPY src/shop /shop
 
-CMD ["python", "-m", "run_server"]
+CMD ["python", "-m", "main"]
 
 
 
