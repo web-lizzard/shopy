@@ -1,6 +1,6 @@
 import pytest
 
-from shop.product.value_objects import Quantity
+from shop.product.domain import Quantity
 
 def test_quantity_representation():
     quantity = Quantity(5)

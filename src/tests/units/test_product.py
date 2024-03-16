@@ -1,7 +1,6 @@
 import pytest
 
-from shop.product.entity import Product
-from shop.product.value_objects import Quantity, Money, ProductQuantityActions
+from shop.product.domain import Product, Quantity, Money, ProductQuantityActions
 
 @pytest.fixture
 def product():

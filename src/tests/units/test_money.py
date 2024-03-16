@@ -1,5 +1,5 @@
 import pytest
-from shop.product.value_objects import Money, Currency
+from shop.product.domain import Money, Currency
 
 def test_repr():
     money = Money(10000, Currency.USD)
