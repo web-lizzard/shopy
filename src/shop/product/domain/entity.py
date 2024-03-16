@@ -8,6 +8,7 @@ import uuid
 class Product:
     quantity: Quantity
     price: Money
+    name: str
     id: str = field(default_factory=lambda: str(uuid.uuid4()))
     description: str | None = None
     image_url: str | None = None

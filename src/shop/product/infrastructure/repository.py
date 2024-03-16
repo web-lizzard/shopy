@@ -5,6 +5,7 @@ from sqlalchemy import select
 
 from ..domain import Product, Quantity, Money
 from ..model import Product as ProductModel
+from ..exceptions import ProductNotExistError
 
 
 
@@ -16,11 +17,13 @@ class ProductBuilder:
     def build(self) -> Product:
         return Product(quantity=Quantity(self._model.quantity), 
                        price=Money(self._model.price), 
+                       name= self._model.name,
                        id=self._model.id, 
                        description=self._model.description, 
                        image_url=self._model.description, 
                        created_at=self._model.created_at, 
-                       modified_at=self._model.modified_at)
+                       modified_at=self._model.modified_at
+                       )
 
 
 
@@ -54,7 +57,7 @@ class SQLProductRepository(ProductRepository):
         db_product = await self._get(product_to_change.id)
 
         if db_product is None:
-            raise NotImplementedError() ## TODO: Add custom exception for not found product
+            raise ProductNotExistError(product_id=product_to_change.id)
         
         db_product.quantity = product_to_change.quantity.value
 
