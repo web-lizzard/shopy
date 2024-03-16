@@ -29,14 +29,17 @@ COPY pyproject.toml poetry.lock /app/
 
 FROM poetry-base as core-dev
 
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONUNBUFFERED=1 PYTHONFAULTHANDLER=1
 
 COPY src/core core 
 COPY src/shop shop
+COPY src/tests tests
+
+RUN poetry install --only core,dev && rm -rf ${POETRY_CACHE_DIR}
 
 FROM core-dev as server-dev
 
-RUN poetry install --only backend,core && rm -rf ${POETRY_CACHE_DIR}
+RUN poetry install --only backend && rm -rf ${POETRY_CACHE_DIR}
 
 RUN touch /app/__init__.py
 COPY src/server server
@@ -53,7 +56,6 @@ FROM poetry-export as server-export
 RUN poetry export --only core,backend --without-hashes --no-interaction --output requirements.txt
 
 FROM python:${PYTHON_VERSION}-slim as production-server
-ENV PYTHONUNBUFFERED=1 PYTHONFAULTHANDLER=1
 
 COPY --from=server-export /requirements.txt requirements.txt
 RUN pip install --no-cache-dir --disable-pip-version-check --no-input -r requirements.txt
