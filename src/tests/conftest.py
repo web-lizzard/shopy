@@ -3,6 +3,7 @@ import pytest
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker, AsyncEngine
 
 from core.db.model import Base
+from shop.product.model import Product
 
 @pytest.fixture(scope='function')
 async def engine():
@@ -30,3 +31,13 @@ async def session_factory(engine):
     async with async_session() as session:
         await session.rollback()
         await session.close()
+
+@pytest.fixture(scope="function")
+async def product_model(session_factory):
+    async with session_factory() as session:
+        product = Product(name="Test Product", quantity=10, price=10000)
+        session.add(product)
+        await session.commit()
+        yield product
+        session.delete(product)
+        await session.commit()

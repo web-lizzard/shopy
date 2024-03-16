@@ -1,17 +1,6 @@
-import pytest
 from shop.product.model import Product as ProductModel
 from shop.product.domain import Product, Quantity, Money
 from shop.product.infrastructure.repository import SQLProductRepository, ProductBuilder
-
-@pytest.fixture(scope="function")
-async def product_model(session_factory):
-    async with session_factory() as session:
-        product = ProductModel(name="Test Product", quantity=10, price=10000)
-        session.add(product)
-        await session.commit()
-        yield product
-        session.delete(product)
-        await session.commit()
 
 async def test_get_product_returns_product_domain_object(session_factory, product_model):
     async with session_factory() as session:
