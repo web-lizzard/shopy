@@ -30,9 +30,15 @@ class SQLProductUnitOfWork(ProductUnitOfWork):
         super().__init__()
 
     async def __aenter__(self):
-        session = self._session_factory()
-        self.repository = SQLProductRepository(session)
+        self.session = self._session_factory()
+        self.repository = SQLProductRepository(self.session)
         return await super().__aenter__()
     
     async def __aexit__(self, *args):
         return await super().__aexit__(*args)
+    
+    async def commit(self):
+        await self.session.commit()
+
+    async def rollback(self):
+        await self.session.rollback()

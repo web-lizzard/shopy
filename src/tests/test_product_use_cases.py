@@ -5,6 +5,7 @@ from shop.product.use_cases import UpdateProductQuantityUseCase, GetProductUseCa
 from shop.product.domain import Product, Quantity, Money, ProductQuantityActions
 from shop.product.exceptions import OutOfStockError
 
+
 @pytest.fixture
 def product():
     return Product(price=Money.mint(35.5), quantity=Quantity(5), name='test')
@@ -40,6 +41,7 @@ async def test_update_product_use_case_update_quantity(unit_of_work, product):
     product = await use_case.execute(dto)
 
     assert product.quantity == 20
+    assert unit_of_work.committed is True
 
 
 async def test_update_product_use_case_raises_error_when_quantity_is_less_than_zero(unit_of_work, product):
