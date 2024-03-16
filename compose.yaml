@@ -10,6 +10,7 @@ services:
     volumes:
       - ./src:/app
       - /app/.venv
+      - ./pytest.ini:/app/pytest.ini
 
   postgres:
     image: postgres:11-alpine

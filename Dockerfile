@@ -44,6 +44,7 @@ RUN poetry install --only backend && rm -rf ${POETRY_CACHE_DIR}
 RUN touch /app/__init__.py
 COPY src/server server
 COPY src/main.py main.py
+COPY pytest.ini /app/
 
 CMD ["python", "-m", "main"]
 
