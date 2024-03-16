@@ -1,14 +1,23 @@
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Self
+from enum import StrEnum
+
+class Currency(StrEnum):
+    USD = 'USD'
+    EUR = "EUR"
+
+class ProductQuantityActions(StrEnum):
+    ADD = 'ADD'
+    SUBTRACT = 'SUBTRACT'
 
 @dataclass
 class Money:
     amount: int
-    currency: str
+    currency: Currency = Currency.USD
 
     @classmethod
-    def mint(cls, value: float | Decimal, currency: str) -> Self:
+    def mint(cls, value: float | Decimal, currency: Currency) -> Self:
             amount = int(value * 100)
             return cls(amount=amount, currency=currency)
 
@@ -42,8 +51,6 @@ class Money:
         return Money(self.amount // other, self.currency)
 
 
-from dataclasses import dataclass
-
 @dataclass
 class Quantity:
     value: int
@@ -60,41 +67,36 @@ class Quantity:
             return self.value == other.value
         if isinstance(other, int):
             return self.value == other
-        
         return False
 
-    def __lt__(self, other):
+    def __add__(self, other):
         if isinstance(other, Quantity):
-            return self.value < other.value
+            return Quantity(self.value + other.value)
         if isinstance(other, int):
-            return self.value < other
+            return Quantity(self.value + other)
         
-        raise TypeError("Unsupported operand type(s) for <: 'Quantity' and '{}'".format(type(other).__name__))
+        raise TypeError("Unsupported operand type(s) for +: 'Quantity' and '{}'".format(type(other).__name__))
 
-    def __le__(self, other):
+    def __sub__(self, other):
         if isinstance(other, Quantity):
-            return self.value <= other.value
+            return Quantity(self.value - other.value)
         if isinstance(other, int):
-            return self.value <= other
+            return Quantity(self.value - other)
         
-        raise TypeError("Unsupported operand type(s) for <=: 'Quantity' and '{}'".format(type(other).__name__))
+        raise TypeError("Unsupported operand type(s) for -: 'Quantity' and '{}'".format(type(other).__name__))
 
-    def __gt__(self, other):
-        if isinstance(other, Quantity):
-            return self.value > other.value
+    def __mul__(self, other):
         if isinstance(other, int):
-            return self.value > other
+            return Quantity(self.value * other)
         
-        raise TypeError("Unsupported operand type(s) for >: 'Quantity' and '{}'".format(type(other).__name__))
+        raise TypeError("Unsupported operand type(s) for *: 'Quantity' and '{}'".format(type(other).__name__))
 
-    def __ge__(self, other):
-        if isinstance(other, Quantity):
-            return self.value >= other.value
-        if isinstance(other, int):
-            return self.value >= other
-       
-        raise TypeError("Unsupported operand type(s) for >=: 'Quantity' and '{}'".format(type(other).__name__))
+    def __truediv__(self, other):
+        if not isinstance(other, int):
+            raise TypeError("Unsupported operand type(s) for /: 'Quantity' and '{}'".format(type(other).__name__))
 
-
-
+        if other == 0:
+            raise ValueError("Division by zero")
+                
+        return Quantity(self.value // other)
 
