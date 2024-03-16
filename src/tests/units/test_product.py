@@ -4,7 +4,7 @@ from shop.product.domain import Product, Quantity, Money, ProductQuantityActions
 
 @pytest.fixture
 def product():
-    return Product(id="1", quantity=Quantity(10), price=Money(2))
+    return Product(id="1", quantity=Quantity(10), price=Money(2), name='test')
 
 def test_add_quantity(product: Product):
     initial_quantity = product.quantity

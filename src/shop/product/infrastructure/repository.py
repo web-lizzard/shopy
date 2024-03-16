@@ -26,8 +26,6 @@ class ProductBuilder:
                        )
 
 
-
-
 class ProductRepository(abc.ABC):
 
     @abc.abstractmethod

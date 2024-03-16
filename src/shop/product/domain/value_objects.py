@@ -17,7 +17,7 @@ class Money:
     currency: Currency = Currency.USD
 
     @classmethod
-    def mint(cls, value: float | Decimal, currency: Currency) -> Self:
+    def mint(cls, value: float | Decimal, currency: Currency = Currency.USD) -> Self:
             amount = int(value * 100)
             return cls(amount=amount, currency=currency)
 
