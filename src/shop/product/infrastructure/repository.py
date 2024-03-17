@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from ..domain import Product, Quantity, Money
-from ..model import Product as ProductModel
+from ...model import Product as ProductModel
 from ..exceptions import ProductNotExistError
 
 

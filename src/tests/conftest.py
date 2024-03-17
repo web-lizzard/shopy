@@ -3,7 +3,7 @@ import pytest
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker, AsyncEngine
 
 from core.db.model import Base
-from shop.product.model import Product
+from shop.model import Product
 
 @pytest.fixture(scope='function')
 async def engine():
