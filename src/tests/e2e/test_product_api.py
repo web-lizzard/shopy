@@ -7,8 +7,6 @@ from shop.product.infrastructure import ProductBuilder
 def expected_response(product_model):
     return convert_product_to_schema(ProductBuilder(product_model).build()).model_dump()
 
-
-
 async def test_get_products_returns_list(client, session_maker_override, product_model): 
     response =  client.get('/products')
 

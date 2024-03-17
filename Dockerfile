@@ -34,6 +34,8 @@ ENV PYTHONUNBUFFERED=1 PYTHONFAULTHANDLER=1
 COPY src/core core 
 COPY src/shop shop
 COPY src/tests tests
+COPY pytest.ini pytest.ini
+COPY alembic.ini alembic.ini
 
 RUN poetry install --only core,dev && rm -rf ${POETRY_CACHE_DIR}
 
@@ -44,7 +46,6 @@ RUN poetry install --only backend && rm -rf ${POETRY_CACHE_DIR}
 RUN touch /app/__init__.py
 COPY src/server server
 COPY src/main.py main.py
-COPY pytest.ini /app/
 
 CMD ["python", "-m", "main"]
 

@@ -10,7 +10,12 @@ services:
     volumes:
       - ./src:/app
       - /app/.venv
-      - ./pytest.ini:/app/pytest.ini
+      - type: bind
+        source: ./pytest.ini
+        target: /app/pytest.ini
+      - type: bind
+        source: ./alembic.ini
+        target: /app/alembic.ini
 
   postgres:
     image: postgres:11-alpine
