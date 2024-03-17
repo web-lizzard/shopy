@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timedelta
 import functools
 from uuid import uuid4
 
@@ -55,6 +55,7 @@ class Cart:
     products_in_cart: ProductsInCart
     order_info: OrderInfo | None
     cart_state: CartState
+    expiration_at: datetime
 
     def __init__(self, 
                  id: str | None = None, 
@@ -62,7 +63,10 @@ class Cart:
                  modified_at: datetime = datetime.now(), 
                  created_at: datetime = datetime.now(), 
                  cart_state: CartState = CartState.CREATED, 
-                 order_info: OrderInfo | None = None) -> None:
+                 order_info: OrderInfo | None = None,
+                expiration_at: datetime = datetime.now() + timedelta(hours=2)
+                 ) -> None:
+        
         
         self.id = id if id else str(uuid4())
         self.products_in_cart = products_in_cart if products_in_cart else ProductsInCart()
@@ -70,6 +74,7 @@ class Cart:
         self.order_info = order_info
         self.modified_at = modified_at
         self.created_at = created_at
+        self.expiration_at = expiration_at
 
     def add_product_to_cart(self, product: ProductInCart):
         self.products_in_cart.add_product(product)
