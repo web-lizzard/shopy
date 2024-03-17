@@ -10,7 +10,8 @@ class CartState(StrEnum):
 @dataclass(frozen=True)
 class OrderInfo:
     email: str
-    address: str
+    shipping_address: str
+    customer_name: str
 
 @dataclass()
 class ProductInCart:

@@ -1,9 +1,11 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 import functools
+from uuid import uuid4
 
 from shop.product.domain import Quantity , Money
 from .value_objects import ProductInCart, CartState, OrderInfo
+from ..exceptions import CartNotReadyError
 
 
 @dataclass
@@ -45,6 +47,7 @@ class ProductsInCart:
     def __len__(self) -> int:
         return len(self.products)
 
+
 class Cart:
     id: str
     modified_at: datetime
@@ -52,6 +55,21 @@ class Cart:
     products_in_cart: ProductsInCart
     order_info: OrderInfo | None
     cart_state: CartState
+
+    def __init__(self, 
+                 id: str | None = None, 
+                 products_in_cart: ProductsInCart | None = None, 
+                 modified_at: datetime = datetime.now(), 
+                 created_at: datetime = datetime.now(), 
+                 cart_state: CartState = CartState.CREATED, 
+                 order_info: OrderInfo | None = None) -> None:
+        
+        self.id = id if id else str(uuid4())
+        self.products_in_cart = products_in_cart if products_in_cart else ProductsInCart()
+        self.cart_state = cart_state
+        self.order_info = order_info
+        self.modified_at = modified_at
+        self.created_at = created_at
 
     def add_product_to_cart(self, product: ProductInCart):
         self.products_in_cart.add_product(product)
@@ -64,13 +82,13 @@ class Cart:
 
     def execute_order(self):
         if self.cart_state is not CartState.CREATED:
-            raise NotImplementedError()
+            raise CartNotReadyError(self.cart_state)
 
         if self.order_info is None:
-            raise NotImplementedError() 
+            raise CartNotReadyError('You have to provide order info')
         
         if not len(self.products_in_cart):
-            raise NotImplementedError()
+            raise CartNotReadyError("You have to add at least one product to cart")
 
 
         self.cart_state = CartState.EXECUTED
