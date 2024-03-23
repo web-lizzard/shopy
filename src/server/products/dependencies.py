@@ -16,9 +16,11 @@ def get_sessionmaker() -> async_sessionmaker[AsyncSession]:
 
 SessionMaker = Annotated[async_sessionmaker[AsyncSession], Depends(get_sessionmaker)]
 
-def get_unit_of_work(session_factory: Annotated[SessionMaker, Depends(get_sessionmaker)]) -> ProductUnitOfWork:
+
+def get_unit_of_work(
+    session_factory: Annotated[SessionMaker, Depends(get_sessionmaker)]
+) -> ProductUnitOfWork:
     return SQLProductUnitOfWork(session_factory)
 
-UnitOfWork = Annotated[ProductUnitOfWork, Depends(get_unit_of_work)]
 
-    
+UnitOfWork = Annotated[ProductUnitOfWork, Depends(get_unit_of_work)]

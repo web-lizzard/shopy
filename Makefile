@@ -16,3 +16,5 @@ alembic_upgrade: # apply database migrations
 alembic_downgrade: # revert last database migration
 	$(DOCKER_SERVER_RUN) alembic downgrade -1
 
+lint:
+	${DOCKER_SERVER_RUN} black ./

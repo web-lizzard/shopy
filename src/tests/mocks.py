@@ -2,6 +2,7 @@ from shop.product.exceptions import ProductNotExistError
 from shop.product.infrastructure import ProductRepository, ProductUnitOfWork
 from shop.product.domain import Product
 
+
 class FakeRepository(ProductRepository):
     def __init__(self, products: list[Product] | None = None):
         self.products = products if products else []
@@ -13,7 +14,7 @@ class FakeRepository(ProductRepository):
         return None
 
     async def list(self, limit: int, skip: int):
-        return self.products[skip:skip+limit]
+        return self.products[skip : skip + limit]
 
     async def update_quantity(self, product_to_change: Product) -> Product:
         for idx, product in enumerate(self.products):
@@ -21,7 +22,8 @@ class FakeRepository(ProductRepository):
                 self.products[idx] = product_to_change
                 return product_to_change
         raise ValueError("Product not found")
-    
+
+
 class FakeUnitOfWork(ProductUnitOfWork):
     repository = FakeRepository()
 
@@ -34,7 +36,3 @@ class FakeUnitOfWork(ProductUnitOfWork):
 
     async def rollback(self):
         pass
-        
-
-  
-

@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from shop.product.domain import Currency
 
+
 class ProductSchema(BaseModel):
     quantity: int
     price: int

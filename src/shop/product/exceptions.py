@@ -1,8 +1,6 @@
-
-
 class ProductNotExistError(Exception):
     def __init__(self, product_id: str) -> None:
-        super().__init__(f'Product of ID: {product_id} not exist')
+        super().__init__(f"Product of ID: {product_id} not exist")
 
 
 class OutOfStockError(Exception):

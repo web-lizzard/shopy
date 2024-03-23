@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import functools
 from uuid import uuid4
 
-from shop.product.domain import Quantity , Money
+from shop.product.domain import Quantity, Money
 from .value_objects import ProductInCart, CartState, OrderInfo
 from ..exceptions import CartNotReadyError
 
@@ -14,14 +14,18 @@ class ProductsInCart:
 
     @property
     def total_cost(self) -> Money:
-        return functools.reduce(lambda price, product : price + product.product.price * product.quantity, self.products, Money(0))
-    
+        return functools.reduce(
+            lambda price, product: price + product.product.price * product.quantity,
+            self.products,
+            Money(0),
+        )
+
     def add_product(self, product: ProductInCart):
         product_in_cart = self.find_product(product)
 
         if product_in_cart is None:
             return self.products.append(product)
-        
+
         product_in_cart.quantity += product.quantity
 
     def remove_product(self, product: ProductInCart):
@@ -40,7 +44,13 @@ class ProductsInCart:
 
     def find_product(self, product_to_find: ProductInCart) -> ProductInCart | None:
         try:
-            return next((product_in_cart for product_in_cart in self.products if product_in_cart.product == product_to_find.product))
+            return next(
+                (
+                    product_in_cart
+                    for product_in_cart in self.products
+                    if product_in_cart.product == product_to_find.product
+                )
+            )
         except StopIteration:
             return None
 
@@ -57,19 +67,21 @@ class Cart:
     cart_state: CartState
     expired_at: datetime
 
-    def __init__(self, 
-                 id: str | None = None, 
-                 products_in_cart: ProductsInCart | None = None, 
-                 modified_at: datetime = datetime.now(), 
-                 created_at: datetime = datetime.now(), 
-                 cart_state: CartState = CartState.CREATED, 
-                 order_info: OrderInfo | None = None,
-                 expired_at: datetime = datetime.now() + timedelta(hours=2)
-                 ) -> None:
-        
-        
+    def __init__(
+        self,
+        id: str | None = None,
+        products_in_cart: ProductsInCart | None = None,
+        modified_at: datetime = datetime.now(),
+        created_at: datetime = datetime.now(),
+        cart_state: CartState = CartState.CREATED,
+        order_info: OrderInfo | None = None,
+        expired_at: datetime = datetime.now() + timedelta(hours=2),
+    ) -> None:
+
         self.id = id if id else str(uuid4())
-        self.products_in_cart = products_in_cart if products_in_cart else ProductsInCart()
+        self.products_in_cart = (
+            products_in_cart if products_in_cart else ProductsInCart()
+        )
         self.cart_state = cart_state
         self.order_info = order_info
         self.modified_at = modified_at
@@ -78,7 +90,7 @@ class Cart:
 
     def add_product_to_cart(self, product: ProductInCart):
         self.products_in_cart.add_product(product)
-    
+
     def remove_product_from_cart(self, product: ProductInCart):
         self.products_in_cart.remove_product(product)
 
@@ -90,10 +102,9 @@ class Cart:
             raise CartNotReadyError(self.cart_state)
 
         if self.order_info is None:
-            raise CartNotReadyError('You have to provide order info')
-        
+            raise CartNotReadyError("You have to provide order info")
+
         if not len(self.products_in_cart):
             raise CartNotReadyError("You have to add at least one product to cart")
-
 
         self.cart_state = CartState.EXECUTED

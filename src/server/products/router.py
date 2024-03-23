@@ -7,17 +7,18 @@ from .dependencies import UnitOfWork
 from .schemas import ProductSchema
 from .utils import convert_product_to_schema
 
-router = APIRouter(prefix='/products')
+router = APIRouter(prefix="/products")
 
 
-@router.get('/')
+@router.get("/")
 async def get_products(unit_of_work: UnitOfWork) -> list[ProductSchema]:
     dto = GetProductsDto()
     use_case = GetProductsUseCase(unit_of_work)
     products = await use_case.execute(dto)
     return [convert_product_to_schema(product) for product in products]
 
-@router.get('/{product_id}')
+
+@router.get("/{product_id}")
 async def get_product(product_id: str, unit_of_work: UnitOfWork) -> ProductSchema:
     dto = GetProductDto(id=product_id)
     use_case = GetProductUseCase(unit_of_work)
@@ -26,6 +27,3 @@ async def get_product(product_id: str, unit_of_work: UnitOfWork) -> ProductSchem
         return convert_product_to_schema(product)
     except ProductNotExistError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
-
-
-    

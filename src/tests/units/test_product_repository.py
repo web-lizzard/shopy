@@ -2,7 +2,10 @@ from shop.models import Product as ProductModel
 from shop.product.domain import Product, Quantity, Money
 from shop.product.infrastructure.repository import SQLProductRepository, ProductBuilder
 
-async def test_get_product_returns_product_domain_object(session_factory, product_model):
+
+async def test_get_product_returns_product_domain_object(
+    session_factory, product_model
+):
     async with session_factory() as session:
         repo = SQLProductRepository(session)
 
@@ -11,6 +14,7 @@ async def test_get_product_returns_product_domain_object(session_factory, produc
         assert product is not None
         assert isinstance(product, Product)
 
+
 async def test_list_returns_products(session_factory, product_model):
     async with session_factory() as session:
         repo = SQLProductRepository(session)
@@ -18,6 +22,7 @@ async def test_list_returns_products(session_factory, product_model):
         products = await repo.list()
 
         assert len(products) == 1
+
 
 async def test_update_quantity_updates_q_correctly(session_factory, product_model):
     async with session_factory() as session:
@@ -32,4 +37,3 @@ async def test_update_quantity_updates_q_correctly(session_factory, product_mode
 
         assert p is not None
         assert p.quantity == 20
-

@@ -21,11 +21,12 @@ class ProductUnitOfWork(abc.ABC):
     @abc.abstractmethod
     async def rollback():
         raise NotImplementedError
-    
 
 
 class SQLProductUnitOfWork(ProductUnitOfWork):
-    def __init__(self, session_factory: async_sessionmaker[AsyncSession] = DEFAULT_SESSION_MAKER) -> None:
+    def __init__(
+        self, session_factory: async_sessionmaker[AsyncSession] = DEFAULT_SESSION_MAKER
+    ) -> None:
         self._session_factory = session_factory
         super().__init__()
 
@@ -33,10 +34,10 @@ class SQLProductUnitOfWork(ProductUnitOfWork):
         self.session = self._session_factory()
         self.repository = SQLProductRepository(self.session)
         return await super().__aenter__()
-    
+
     async def __aexit__(self, *args):
         return await super().__aexit__(*args)
-    
+
     async def commit(self):
         await self.session.commit()
 

@@ -6,11 +6,13 @@ import functools
 
 from .db import DATABASE_ENGINE, Base
 
+
 @asynccontextmanager
-async def _lifespan(_:FastAPI) -> AsyncGenerator[None, Any]:
+async def _lifespan(_: FastAPI) -> AsyncGenerator[None, Any]:
     async with DATABASE_ENGINE.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield
+
 
 @functools.cache
 def create_app() -> FastAPI:

@@ -2,9 +2,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import BaseModel, PostgresDsn
 
 
-
 class DatabaseConfiguration(BaseModel):
     url: PostgresDsn
+
 
 class Configuration(BaseSettings):
     model_config = SettingsConfigDict(
@@ -16,7 +16,6 @@ class Configuration(BaseSettings):
     port: int = 80
 
     database: DatabaseConfiguration
-
 
 
 configuration = Configuration()
