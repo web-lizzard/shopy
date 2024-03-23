@@ -55,7 +55,7 @@ class Cart:
     products_in_cart: ProductsInCart
     order_info: OrderInfo | None
     cart_state: CartState
-    expiration_at: datetime
+    expired_at: datetime
 
     def __init__(self, 
                  id: str | None = None, 
@@ -64,7 +64,7 @@ class Cart:
                  created_at: datetime = datetime.now(), 
                  cart_state: CartState = CartState.CREATED, 
                  order_info: OrderInfo | None = None,
-                expiration_at: datetime = datetime.now() + timedelta(hours=2)
+                 expired_at: datetime = datetime.now() + timedelta(hours=2)
                  ) -> None:
         
         
@@ -74,7 +74,7 @@ class Cart:
         self.order_info = order_info
         self.modified_at = modified_at
         self.created_at = created_at
-        self.expiration_at = expiration_at
+        self.expired_at = expired_at
 
     def add_product_to_cart(self, product: ProductInCart):
         self.products_in_cart.add_product(product)

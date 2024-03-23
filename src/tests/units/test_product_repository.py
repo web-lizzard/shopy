@@ -1,4 +1,4 @@
-from shop.model import Product as ProductModel
+from shop.models import Product as ProductModel
 from shop.product.domain import Product, Quantity, Money
 from shop.product.infrastructure.repository import SQLProductRepository, ProductBuilder
 

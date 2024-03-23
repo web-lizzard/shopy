@@ -3,7 +3,9 @@ import pytest
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker, AsyncEngine
 
 from core.db.model import Base
-from shop.model import Product
+from shop.cart.domain import CartState
+from shop.models import Product, OrderInfo, Cart, ProductInCart
+from datetime import datetime, timedelta
 
 @pytest.fixture(scope='function')
 async def engine():
@@ -40,4 +42,35 @@ async def product_model(session_factory):
         await session.commit()
         yield product
         session.delete(product)
+        await session.commit()
+
+@pytest.fixture(scope='function')
+async def cart_model(session_factory):
+    async with session_factory() as session:
+        cart = Cart(expired_at = datetime.now() + timedelta(minutes=10), cart_state=CartState.CREATED)
+        session.add(cart)
+        await session.commit()
+        yield cart
+        session.delete(cart)
+        await session.commit()
+
+@pytest.fixture(scope='function')
+async def product_in_cart_model(session_factory, product_model, cart_model):
+    async with session_factory as session:
+        product = ProductInCart(product_id=product_model.id, cart_id=cart_model.id)
+        session.add(product)
+        await session.commit()
+        yield product
+        session.delete(product)
+        await session.commit()
+
+
+@pytest.fixture(scope='function')
+async def order_info_model(session_factory, cart_model):
+    async with session_factory() as session:
+        order_info = OrderInfo(cart_id=cart_model.id, shipping_address='address', customer_name='name', email='test@email.com')
+        session.add(order_info)
+        await session.commit()
+        yield order_info
+        session.delete(order_info)
         await session.commit()
